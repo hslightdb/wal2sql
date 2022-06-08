@@ -115,8 +115,8 @@ Parameters
 * `include-transaction`: emit records denoting the start and end of each transaction. Default is _true_.
 * `include-unchanged-toast` (deprecated): Don't use it. It is deprecated.
 * `filter-origins`: exclude changes from the specified origins. Default is empty which means that no origin will be filtered. It is a comma separated value.
-* `filter-tables`: exclude rows from the specified tables. Default is empty which means that no table will be filtered. It is a comma separated value. The tables should be schema-qualified. `*.foo` means table foo in all schemas and `bar.*` means all tables in schema bar. Special characters (space, single quote, comma, period, asterisk) must be escaped with backslash. Schema and table are case-sensitive. Table `"public"."Foo bar"` should be specified as `public.Foo\ bar`.
-* `add-tables`: include only rows from the specified tables. Default is all tables from all schemas. It has the same rules from `filter-tables`.
+* `filter-tables`: exclude rows from the specified tables. Default is empty which means that no table will be filtered. It is a comma separated value. The tables should be schema-qualified. `*.foo` means table foo in all schemas and `bar.*` means all tables in schema bar. Special characters (space, single quote, comma, period, asterisk) must be escaped with backslash. Schema and table are case-sensitive. Table `"public"."Foo bar"` should be specified as `public.Foo\ bar`. LightDB fork support regexp.
+* `add-tables`: include only rows from the specified tables. Default is all tables from all schemas. It has the same rules from `filter-tables`. LightDB fork support regexp.
 * `filter-msg-prefixes`: exclude messages if prefix is in the list. Default is empty which means that no message will be filtered. It is a comma separated value.
 * `add-msg-prefixes`: include only messages if prefix is in the list. Default is all prefixes. It is a comma separated value. `wal2json` applies `filter-msg-prefixes` before this parameter.
 * `format-version`: defines which format to use. Default is _1_.
@@ -125,9 +125,9 @@ Parameters
 Examples
 ========
 
-There are two ways to obtain the changes (JSON objects) from **wal2json** plugin: calling functions via SQL or pg_recvlogical.
+There are two ways to obtain the changes (JSON objects) from **wal2json** plugin: calling functions via SQL or ltdts_recvlogical.
 
-pg_recvlogical
+ltdts_recvlogical
 --------------
 
 Besides the configuration above, it is necessary to configure a replication connection to use pg_recvlogical. A logical replication connection in version 9.4, 9.5, and 9.6 requires `replication` keyword in the database column. Since version 10, logical replication matches a normal entry with a database name or keywords such as `all`.
@@ -155,8 +155,8 @@ A restart is necessary if you changed max_wal_senders.
 You are ready to try **wal2json**. In one terminal:
 
 ```
-$ pg_recvlogical -d postgres --slot test_slot --create-slot -P wal2json
-$ pg_recvlogical -d postgres --slot test_slot --start -o pretty-print=1 -o add-msg-prefixes=wal2json -f -
+$ ltdts_recvlogical -d postgres --slot test_slot --create-slot -P wal2json
+$ ltdts_recvlogical -d postgres --slot test_slot --start -o pretty-print=1 -o add-msg-prefixes=wal2json -f -
 ```
 
 In another terminal:
